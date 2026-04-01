@@ -2,7 +2,7 @@
 
 import { Player } from "@remotion/player";
 import type { NextPage } from "next";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { z } from "zod";
 import {
   CompositionProps,
@@ -18,13 +18,10 @@ import { Tips } from "../components/Tips";
 import { Main } from "../remotion/MyComp/Main";
 
 const Home: NextPage = () => {
-  const [text, setText] = useState<string>(defaultMyCompProps.title);
-
-  const inputProps: z.infer<typeof CompositionProps> = useMemo(() => {
-    return {
-      title: text,
-    };
-  }, [text]);
+  const inputProps: z.infer<typeof CompositionProps> = useMemo(
+    () => defaultMyCompProps,
+    [],
+  );
 
   return (
     <div>
@@ -38,8 +35,6 @@ const Home: NextPage = () => {
             compositionHeight={VIDEO_HEIGHT}
             compositionWidth={VIDEO_WIDTH}
             style={{
-              // Can't use tailwind class for width since player's default styles take presedence over tailwind's,
-              // but not over inline styles
               width: "100%",
             }}
             controls
@@ -47,11 +42,7 @@ const Home: NextPage = () => {
             loop
           />
         </div>
-        <RenderControls
-          text={text}
-          setText={setText}
-          inputProps={inputProps}
-        ></RenderControls>
+        <RenderControls inputProps={inputProps}></RenderControls>
         <Spacing></Spacing>
         <Spacing></Spacing>
         <Spacing></Spacing>
