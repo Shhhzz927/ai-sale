@@ -37,3 +37,9 @@ next-env.d.ts
 out/
 .env
 build
+
+# Local Remotion render server
+.render-tmp/
+public/renders/uploads/*
+!public/renders/uploads/.gitkeep
+public/renders/*.mp4

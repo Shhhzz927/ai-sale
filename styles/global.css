@@ -60,3 +60,15 @@
     }
   }
 }
+
+.copy-block {
+  color: var(--foreground);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  min-height: 4rem;
+  white-space: pre-wrap;
+  padding: var(--geist-half-pad);
+  border: 1px solid var(--unfocused-border-color);
+  border-radius: var(--geist-border-radius);
+  background: var(--background);
+}

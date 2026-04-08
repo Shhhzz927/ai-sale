@@ -7,5 +7,8 @@ import { Config } from "@remotion/cli/config";
 import { webpackOverride } from "./src/remotion/webpack-override.mjs";
 
 Config.setVideoImageFormat("jpeg");
+Config.setBrowserExecutable(
+	"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+);
 
 Config.overrideWebpackConfig(webpackOverride);
