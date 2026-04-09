@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SalesForge AI — Deal Room</title>
+  <style>
+    :root {
+      --bg: #0b1220;
+      --bg-2: #111827;
+      --panel-bg: rgba(15, 23, 42, 0.78);
+      --panel-strong: rgba(17, 24, 39, 0.94);
+      --surface: #111827;
+      --surface-2: #1e293b;
+
+      --border: rgba(148, 163, 184, 0.18);
+      --border-strong: rgba(148, 163, 184, 0.28);
+
+      --text: #e5ecf6;
+      --text-muted: #94a3b8;
+
+      --accent: #6366f1;
+      --accent-hover: #818cf8;
+      --accent-soft: rgba(99, 102, 241, 0.18);
+
+      --success: #22c55e;
+
+      --radius: 16px;
+      --radius-xl: 24px;
+
+      --shadow-xs: 0 2px 8px rgba(0, 0, 0, 0.20);
+      --shadow-sm: 0 10px 24px rgba(0, 0, 0, 0.28);
+      --shadow-md: 0 18px 40px rgba(0, 0, 0, 0.38);
+      --shadow-lg: 0 28px 70px rgba(0, 0, 0, 0.48);
+
+      --font: "Inter", "DM Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --mono: "JetBrains Mono", "SF Mono", ui-monospace, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--font);
+      background:
+        radial-gradient(circle at top left, rgba(99,102,241,0.22), transparent 26%),
+        radial-gradient(circle at top right, rgba(56,189,248,0.14), transparent 22%),
+        linear-gradient(180deg, #0b1220 0%, #0f172a 52%, #111827 100%);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.78rem 1.25rem;
+      border-bottom: 1px solid rgba(148,163,184,0.10);
+      background: rgba(8, 15, 28, 0.72);
+      backdrop-filter: blur(14px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .app-header,
+    .layout {
+      max-width: 1520px;
+      margin: 0 auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #6366f1, #7c3aed);
+      display: grid;
+      place-items: center;
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: white;
+      box-shadow: 0 10px 22px rgba(79,70,229,0.28);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 0.98rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    .brand span {
+      display: block;
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .env-badge {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #cbd5e1;
+      padding: 0.45rem 0.78rem;
+      border: 1px solid rgba(148,163,184,0.16);
+      border-radius: 999px;
+      background: rgba(30,41,59,0.72);
+      font-weight: 700;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 330px minmax(0, 1fr);
+      gap: 20px;
+      padding: 18px;
+      min-height: calc(100vh - 68px);
+      align-items: start;
+    }
+
+    .panel {
+      padding: 1.08rem;
+      background: linear-gradient(180deg, rgba(15,23,42,0.88), rgba(17,24,39,0.80));
+      border: 1px solid rgba(148,163,184,0.12);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.42);
+      border-radius: 24px;
+      overflow-y: auto;
+      backdrop-filter: blur(18px);
+      position: sticky;
+      top: 82px;
+      height: fit-content;
+      max-height: calc(100vh - 96px);
+    }
+
+    .main {
+      padding: 0.82rem;
+      overflow-y: auto;
+      background: linear-gradient(180deg, rgba(15,23,42,0.72), rgba(17,24,39,0.66));
+      border: 1px solid rgba(148,163,184,0.12);
+      box-shadow:
+        0 22px 60px rgba(0, 0, 0, 0.34),
+        inset 0 1px 0 rgba(255,255,255,0.03);
+      border-radius: 28px;
+      position: relative;
+      min-height: 680px;
+    }
+
+    .main::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at 88% 8%, rgba(99,102,241,0.16), transparent 18%),
+        radial-gradient(circle at 72% 20%, rgba(56,189,248,0.10), transparent 14%),
+        linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00));
+      z-index: 0;
+    }
+
+    .main > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .main::after {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: 28px;
+      pointer-events: none;
+      box-shadow: 0 0 0 1px rgba(99,102,241,0.04), 0 0 80px rgba(37,99,235,0.06);
+    }
+
+    .panel h2 {
+      margin: 0 0 0.25rem;
+      font-size: 0.78rem;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+      color: #a5b4fc;
+    }
+
+    .panel-role {
+      margin: 0 0 0.7rem;
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+      color: #94a3b8;
+    }
+
+    .panel > p.hint {
+      margin: 0 0 0.85rem;
+      font-size: 0.86rem;
+      line-height: 1.45;
+      color: #cbd5e1;
+    }
+
+    .field {
+      margin-bottom: 0.72rem;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #cbd5e1;
+      margin-bottom: 0.3rem;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      padding: 0.72rem 0.88rem;
+      font: inherit;
+      font-size: 0.94rem;
+      color: #e5ecf6;
+      background: rgba(15, 23, 42, 0.88);
+      border: 1px solid rgba(148,163,184,0.16);
+      border-radius: 14px;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.03),
+        0 4px 10px rgba(0,0,0,0.18);
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease, background 0.18s ease;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      outline: none;
+      border-color: rgba(99,102,241,0.55);
+      box-shadow:
+        0 0 0 4px rgba(99,102,241,0.14),
+        0 10px 22px rgba(0,0,0,0.24);
+      background: rgba(17, 24, 39, 0.96);
+    }
+
+    .field select {
+      cursor: pointer;
+      appearance: none;
+      background-color: rgba(15, 23, 42, 0.88);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M3 4.5L6 8l3-3.5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      padding-right: 2rem;
+    }
+
+    .field select:focus {
+      outline: none;
+      border-color: rgba(99,102,241,0.55);
+      box-shadow:
+        0 0 0 4px rgba(99,102,241,0.14),
+        0 10px 22px rgba(0,0,0,0.24);
+      background-color: rgba(17, 24, 39, 0.96);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M3 4.5L6 8l3-3.5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+    }
+
+    .field input[type="file"] {
+      padding: 0.75rem 0.8rem;
+      background: rgba(15, 23, 42, 0.88);
+    }
+
+    .field input[type="file"]::file-selector-button {
+      font: inherit;
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-right: 0.7rem;
+      padding: 0.55rem 0.85rem;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.14);
+      background: rgba(30,41,59,0.92);
+      color: #e5ecf6;
+      cursor: pointer;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.62rem;
+      margin-top: 0.95rem;
+    }
+
+    .btn {
+      font: inherit;
+      font-size: 0.9rem;
+      font-weight: 750;
+      padding: 0.76rem 0.95rem;
+      border-radius: 14px;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn-primary {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, #6366f1, #7c3aed);
+      color: white;
+      box-shadow: 0 18px 38px rgba(79,70,229,0.34);
+    }
+
+    #btn-video {
+      grid-column: 1 / -1;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #7c83ff, #8b5cf6);
+      transform: translateY(-1px);
+      box-shadow: 0 22px 44px rgba(79,70,229,0.40);
+    }
+
+    .btn-ghost {
+      background: rgba(30,41,59,0.82);
+      color: #e5ecf6;
+      border: 1px solid rgba(148,163,184,0.14);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.18);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(51,65,85,0.96);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: rgba(148,163,184,0.22);
+    }
+
+    .main-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.7rem;
+      flex-wrap: wrap;
+      padding: 0.02rem 0.05rem 0.22rem 0.05rem;
+    }
+
+    .main-top h2 {
+      margin: 0;
+      font-size: 1.7rem;
+      line-height: 1.02;
+      font-weight: 850;
+      letter-spacing: -0.045em;
+      color: #f8fbff;
+    }
+
+    .main-title-block {
+      min-width: 0;
+    }
+
+    .main-top .workspace-label {
+      display: inline-block;
+      margin-top: 0.28rem;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: #94a3b8;
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: #cbd5e1;
+      background: rgba(30,41,59,0.72);
+      border: 1px solid rgba(148,163,184,0.12);
+      border-radius: 999px;
+      padding: 0.5rem 0.75rem;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+    }
+
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #64748b;
+    }
+
+    .status-dot.live {
+      background: #22c55e;
+      box-shadow: 0 0 0 6px rgba(34,197,94,0.10);
+    }
+
+    .output-grid {
+      display: grid;
+      gap: 1rem;
+      padding-top: 0.15rem;
+    }
+
+    .output-grid,
+    #placeholder {
+      width: 100%;
+    }
+
+    .card {
+      background: rgba(15, 23, 42, 0.94);
+      border: 1px solid rgba(148,163,184,0.14);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow:
+        0 18px 42px rgba(0,0,0,0.28),
+        inset 0 1px 0 rgba(255,255,255,0.02);
+      backdrop-filter: blur(12px);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 24px 54px rgba(0,0,0,0.36);
+    }
+
+    .card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.15rem;
+      background: linear-gradient(180deg, rgba(30,41,59,0.98) 0%, rgba(15,23,42,1) 100%);
+      border-bottom: 1px solid rgba(148,163,184,0.10);
+    }
+
+    .card-head h3 {
+      margin: 0;
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #a5b4fc;
+    }
+
+    .card-tag {
+      font-size: 0.68rem;
+      padding: 0.34rem 0.62rem;
+      border-radius: 999px;
+      background: rgba(99,102,241,0.18);
+      color: #c7d2fe;
+      font-weight: 800;
+    }
+
+    .card-body {
+      padding: 1.3rem 1.3rem 1.35rem;
+      font-size: 1rem;
+      color: #d6dfeb;
+      line-height: 1.76;
+    }
+
+    .card-body ul {
+      margin: 0.6rem 0 0;
+      padding-left: 1.2rem;
+    }
+
+    .card-body li {
+      margin-bottom: 0.48rem;
+    }
+
+    .card-body p {
+      margin: 0 0 0.85rem;
+    }
+
+    .card-body p:last-child {
+      margin-bottom: 0;
+    }
+
+    .spec-table {
+      width: 100%;
+      font-size: 0.8rem;
+      border-collapse: collapse;
+    }
+
+    .spec-table th,
+    .spec-table td {
+      text-align: left;
+      padding: 0.45rem 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .spec-table th {
+      width: 38%;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .copy-block {
+      font-family: var(--mono);
+      font-size: 0.83rem;
+      line-height: 1.72;
+      white-space: pre-wrap;
+      background: linear-gradient(180deg, #020617 0%, #0f172a 100%);
+      padding: 1rem;
+      border-radius: 16px;
+      border: 1px solid rgba(148,163,184,0.08);
+      color: #c7d2fe;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+    }
+
+    .placeholder-state {
+      text-align: center;
+      padding: 2.6rem 1.6rem;
+      color: #94a3b8;
+      font-size: 1rem;
+      border: 1px solid rgba(148,163,184,0.10);
+      border-radius: 24px;
+      background:
+        linear-gradient(180deg, rgba(15,23,42,0.96), rgba(17,24,39,0.92));
+      box-shadow:
+        0 20px 45px rgba(0,0,0,0.30),
+        inset 0 1px 0 rgba(255,255,255,0.03);
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .placeholder-state > div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 42rem;
+    }
+
+    .placeholder-state strong {
+      display: block;
+      color: #f8fbff;
+      margin-bottom: 0.4rem;
+      font-size: 1.6rem;
+      line-height: 1.05;
+      font-weight: 850;
+      letter-spacing: -0.05em;
+    }
+
+    .placeholder-state span {
+      display: block;
+      font-size: 0.98rem;
+      line-height: 1.65;
+      color: #94a3b8;
+      max-width: 34rem;
+    }
+
+    .product-image-wrap {
+      margin: 0;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(148,163,184,0.10);
+      background: linear-gradient(180deg, #0f172a, #111827);
+    }
+
+    .product-image-wrap img {
+      display: block;
+      width: 100%;
+      max-height: 340px;
+      object-fit: contain;
+    }
+
+    .video-player-wrap {
+      margin-top: 12px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(148,163,184,0.10);
+      background: linear-gradient(180deg, #0f172a, #111827);
+    }
+
+    .video-player-wrap video {
+      display: block;
+      width: 100%;
+      max-height: 360px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+        padding: 12px;
+        gap: 12px;
+      }
+
+      .panel {
+        position: static;
+        top: auto;
+        max-height: none;
+        border-radius: 20px;
+      }
+
+      .main {
+        min-height: auto;
+        padding: 0.75rem;
+        border-radius: 22px;
+      }
+
+      .main-top h2 {
+        font-size: 1.45rem;
+      }
+
+      .placeholder-state {
+        min-height: 180px;
+        padding: 2rem 1rem;
+      }
+
+      .actions {
+        grid-template-columns: 1fr;
+      }
+
+      .btn-primary,
+      #btn-video {
+        grid-column: auto;
+      }
+    }
+
+    /* Local fallbacks when Google Fonts are unavailable */
+    @font-face {
+      font-family: "DM Sans";
+      font-style: normal;
+      font-weight: 400 700;
+      font-display: swap;
+      src: local("DM Sans");
+    }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://unpkg.com/pptxgenjs@3.12.0/dist/pptxgen.min.js"></script>
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">SF</div>
+      <div>
+        <h1>SalesForge AI</h1>
+        <span>Deal narrative &amp; outreach studio</span>
+      </div>
+    </div>
+    <span class="env-badge">Demo workspace</span>
+  </header>
+
+  <div class="layout">
+    <aside class="panel" aria-labelledby="input-heading">
+      <h2 id="input-heading">Brief builder</h2>
+      <p class="panel-role">Control panel · brief &amp; API inputs</p>
+      <p class="hint">All fields are editable. Generate sends a multipart request to the local API (optional product image). Ensure the server is running on port 3000.</p>
+
+      <form id="brief-form" autocomplete="off">
+        <div class="field">
+          <label for="productType">Product Type</label>
+          <input type="text" id="productType" name="productType" list="productTypeSuggestions" value="B2B procurement platform" placeholder="e.g. Industrial IoT gateway" />
+          <datalist id="productTypeSuggestions">
+            <option value="Industrial IoT gateway"></option>
+            <option value="Enterprise SaaS analytics"></option>
+            <option value="Modular cold-chain sensor"></option>
+            <option value="B2B procurement platform"></option>
+            <option value="AI document automation"></option>
+          </datalist>
+        </div>
+        <div class="field">
+          <label for="material">Material</label>
+          <input type="text" id="material" name="material" value="Anodized aluminum enclosure, tempered glass face" />
+        </div>
+        <div class="field">
+          <label for="style">Style</label>
+          <input type="text" id="style" name="style" value="Minimal, enterprise-trust, outcome-led" />
+        </div>
+        <div class="field">
+          <label for="priceRange">Price Range</label>
+          <input type="text" id="priceRange" name="priceRange" list="priceRangeSuggestions" value="$50K–$120K ACV" placeholder="e.g. $50K–$120K ACV" />
+          <datalist id="priceRangeSuggestions">
+            <option value="$15K–$35K ACV"></option>
+            <option value="$50K–$120K ACV"></option>
+            <option value="$250K+ enterprise deal"></option>
+            <option value="Volume OEM / unit pricing"></option>
+          </datalist>
+        </div>
+        <div class="field">
+          <label for="targetMarket">Target Market</label>
+          <input type="text" id="targetMarket" name="targetMarket" value="Mid-market manufacturing & logistics (500–5,000 FTE)" />
+        </div>
+        <div class="field">
+          <label for="productImage">Product image</label>
+          <input type="file" id="productImage" name="image" accept="image/*" />
+        </div>
+        <div class="actions">
+          <button type="button" class="btn btn-primary" id="btn-generate">Generate</button>
+          <button type="button" class="btn btn-ghost" id="btn-clear">Clear output</button>
+          <button type="button" class="btn btn-ghost" id="btn-ppt" disabled>Generate PPT</button>
+          <button type="button" class="btn btn-ghost" id="btn-video">Generate Video Script</button>
+        </div>
+      </form>
+    </aside>
+
+    <main class="main">
+      <div class="main-top">
+        <div class="main-title-block">
+          <h2>Deal room output</h2>
+          <span class="workspace-label">Workspace · narratives, specs, and scripts</span>
+        </div>
+        <div class="status">
+          <span class="status-dot" id="status-dot" aria-hidden="true"></span>
+          <span id="status-text">Awaiting brief</span>
+        </div>
+      </div>
+
+      <div id="placeholder" class="placeholder-state">
+        <div>
+          <strong>No narrative yet</strong>
+          <span>Configure the brief on the left and click <strong>Generate</strong> to populate product copy, specs, and outreach scripts.</span>
+        </div>
+      </div>
+
+      <div id="output" class="output-grid hidden">
+        <article class="card hidden" id="card-product-image" aria-hidden="true">
+          <div class="card-head">
+            <h3>Product image</h3>
+            <span class="card-tag">Upload</span>
+          </div>
+          <div class="card-body">
+            <figure class="product-image-wrap">
+              <img id="out-product-image" src="" alt="Uploaded product" />
+            </figure>
+          </div>
+        </article>
+        <article class="card">
+          <div class="card-head">
+            <h3>Product overview</h3>
+            <span class="card-tag">Story</span>
+          </div>
+          <div class="card-body" id="out-overview"></div>
+        </article>
+        <article class="card">
+          <div class="card-head">
+            <h3>Key selling points</h3>
+            <span class="card-tag">Positioning</span>
+          </div>
+          <div class="card-body" id="out-points"></div>
+        </article>
+        <article class="card">
+          <div class="card-head">
+            <h3>Technical specifications</h3>
+            <span class="card-tag">Spec sheet</span>
+          </div>
+          <div class="card-body" id="out-specs"></div>
+        </article>
+        <article class="card">
+          <div class="card-head">
+            <h3>PPT Outline</h3>
+            <span class="card-tag">Slides</span>
+          </div>
+          <div class="card-body" id="out-ppt"></div>
+        </article>
+        <article class="card">
+          <div class="card-head">
+            <h3>Cold email template</h3>
+            <span class="card-tag">Outbound</span>
+          </div>
+          <div class="card-body"><div class="copy-block" id="out-email"></div></div>
+        </article>
+        <article class="card">
+          <div class="card-head">
+            <h3>WhatsApp script</h3>
+            <span class="card-tag">Fast follow-up</span>
+          </div>
+          <div class="card-body"><div class="copy-block" id="out-whatsapp"></div></div>
+        </article>
+        <article class="card">
+          <div class="card-head">
+            <h3>Video script</h3>
+            <span class="card-tag">60s loom</span>
+          </div>
+          <div class="card-body">
+            <div class="copy-block" id="out-video"></div>
+            <div class="video-player-wrap hidden" id="video-player-wrap" aria-hidden="true">
+              <video id="out-video-player" controls playsinline preload="metadata"></video>
+            </div>
+          </div>
+        </article>
+      </div>
+    </main>
+  </div>
+
+  <!-- PptxGenJS is loaded on-demand by generatePpt() to avoid load-order issues -->
+  <script>
+    (function () {
+      var pptxgenjsLoadPromise = null;
+
+      // Ensures PptxGenJS is available before we call `new PptxGenJS()`.
+      // This avoids "PptxGenJS is not defined" when CDN load order changes.
+      function ensurePptxGenJSLoaded() {
+        if (typeof window.PptxGenJS !== "undefined") return Promise.resolve(window.PptxGenJS);
+        if (pptxgenjsLoadPromise) return pptxgenjsLoadPromise;
+
+        pptxgenjsLoadPromise = new Promise(function (resolve, reject) {
+          var existing = document.querySelector('script[data-pptxgenjs="1"]');
+          if (existing) {
+            existing.addEventListener("load", function () {
+              resolve(window.PptxGenJS);
+            });
+            existing.addEventListener("error", function () {
+              reject(new Error("Failed to load PptxGenJS"));
+            });
+            return;
+          }
+
+          var s = document.createElement("script");
+          s.src = "https://unpkg.com/pptxgenjs@3.12.0/dist/pptxgen.min.js";
+          s.async = true;
+          s.dataset.pptxgenjs = "1";
+          s.onload = function () {
+            resolve(window.PptxGenJS);
+          };
+          s.onerror = function () {
+            reject(new Error("Failed to load PptxGenJS"));
+          };
+          document.head.appendChild(s);
+        });
+
+        return pptxgenjsLoadPromise;
+      }
+
+      var productType = document.getElementById("productType");
+      var material = document.getElementById("material");
+      var style = document.getElementById("style");
+      var priceRange = document.getElementById("priceRange");
+      var targetMarket = document.getElementById("targetMarket");
+      var productImage = document.getElementById("productImage");
+
+      var briefForm = document.getElementById("brief-form");
+      var btnGenerate = document.getElementById("btn-generate");
+      var generateBtnDefaultText = btnGenerate ? btnGenerate.textContent : "Generate";
+      var btnClear = document.getElementById("btn-clear");
+      var btnPpt = document.getElementById("btn-ppt");
+      var btnVideo = document.getElementById("btn-video");
+      var placeholder = document.getElementById("placeholder");
+      var output = document.getElementById("output");
+      var statusDot = document.getElementById("status-dot");
+      var statusText = document.getElementById("status-text");
+
+      var outOverview = document.getElementById("out-overview");
+      var outPoints = document.getElementById("out-points");
+      var outSpecs = document.getElementById("out-specs");
+      var outEmail = document.getElementById("out-email");
+      var outWhatsapp = document.getElementById("out-whatsapp");
+      var outVideo = document.getElementById("out-video");
+      var videoPlayerWrap = document.getElementById("video-player-wrap");
+      var outVideoPlayer = document.getElementById("out-video-player");
+      var outPpt = document.getElementById("out-ppt");
+      var cardProductImage = document.getElementById("card-product-image");
+      var outProductImage = document.getElementById("out-product-image");
+
+      var API_BASE = "http://localhost:3000";
+
+      function resolveAssetUrl(url) {
+        if (url == null || String(url).trim() === "") return "";
+        var u = String(url).trim();
+        if (/^https?:\/\//i.test(u)) return u;
+        return API_BASE + (u.charAt(0) === "/" ? u : "/" + u);
+      }
+
+      /** Show real video when backend sends videoUrl or video_url; hide and clear otherwise. */
+      function syncVideoPlayerFromData(data) {
+        if (!data || typeof data !== "object") data = {};
+        var raw =
+          data.videoUrl != null && String(data.videoUrl).trim() !== ""
+            ? String(data.videoUrl).trim()
+            : data.video_url != null && String(data.video_url).trim() !== ""
+              ? String(data.video_url).trim()
+              : "";
+        var resolved = raw ? resolveAssetUrl(raw) : "";
+        if (resolved && outVideoPlayer && videoPlayerWrap) {
+          outVideoPlayer.src = resolved;
+          outVideoPlayer.load();
+          videoPlayerWrap.classList.remove("hidden");
+          videoPlayerWrap.setAttribute("aria-hidden", "false");
+        } else {
+          if (outVideoPlayer) {
+            outVideoPlayer.removeAttribute("src");
+            outVideoPlayer.load();
+          }
+          if (videoPlayerWrap) {
+            videoPlayerWrap.classList.add("hidden");
+            videoPlayerWrap.setAttribute("aria-hidden", "true");
+          }
+        }
+      }
+
+      function parseJsonResponseBody(rawText) {
+        if (rawText == null || String(rawText).trim() === "") return null;
+        try {
+          return JSON.parse(rawText);
+        } catch (e) {
+          return null;
+        }
+      }
+
+      function extractHttpErrorMessage(status, parsed, rawText) {
+        if (parsed && typeof parsed === "object") {
+          if (parsed.error != null && String(parsed.error).trim() !== "") return String(parsed.error).trim();
+          if (parsed.message != null && String(parsed.message).trim() !== "") return String(parsed.message).trim();
+        }
+        var snippet = rawText && String(rawText).trim() ? String(rawText).trim().slice(0, 280) : "";
+        if (snippet) return snippet;
+        return "Request failed (" + status + ")";
+      }
+
+      function setGenerateLoading(isLoading) {
+        if (!btnGenerate) return;
+        btnGenerate.disabled = isLoading;
+        btnGenerate.textContent = isLoading ? "Generating..." : generateBtnDefaultText;
+        if (isLoading) {
+          btnGenerate.setAttribute("aria-busy", "true");
+        } else {
+          btnGenerate.removeAttribute("aria-busy");
+        }
+      }
+
+      function esc(s) {
+        var d = document.createElement("div");
+        d.textContent = s;
+        return d.innerHTML;
+      }
+
+      async function generate() {
+        var pt = productType.value.trim();
+        var mat = material.value.trim();
+        var st = style.value.trim();
+        var pr = priceRange.value.trim();
+        var tm = targetMarket.value.trim();
+
+        statusText.textContent = "Generating...";
+        setGenerateLoading(true);
+
+        try {
+          var formData = briefForm ? new FormData(briefForm) : new FormData();
+          if (!briefForm) {
+            formData.append("productType", pt);
+            formData.append("material", mat);
+            formData.append("style", st);
+            formData.append("priceRange", pr);
+            formData.append("targetMarket", tm);
+            if (productImage && productImage.files && productImage.files[0]) {
+              formData.append("image", productImage.files[0]);
+            }
+          }
+
+          var res = await fetch(API_BASE + "/api/generate", {
+            method: "POST",
+            body: formData
+          });
+
+          var rawText = await res.text();
+          var parsed = parseJsonResponseBody(rawText);
+
+          if (!res.ok) {
+            throw new Error(extractHttpErrorMessage(res.status, parsed, rawText));
+          }
+
+          if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+            throw new Error(
+              rawText && String(rawText).trim()
+                ? "Server returned a non-JSON response."
+                : "Server returned an empty response."
+            );
+          }
+
+          window.generatedData = parsed;
+          if (btnPpt) btnPpt.disabled = false;
+          var pptLen = window.generatedData.ppt_outline ? window.generatedData.ppt_outline.length : 0;
+          console.log("Generated PPT slides:", pptLen);
+
+          var data = window.generatedData || {};
+          var overview = typeof data.product_overview === "string" ? data.product_overview : "";
+          var keyPoints = Array.isArray(data.key_selling_points) ? data.key_selling_points : [];
+          var specs = Array.isArray(data.technical_specifications) ? data.technical_specifications : [];
+
+          // Render structured output.
+          outOverview.innerHTML = overview ? overview.replace(/\n/g, "<br>") : "";
+          outPoints.innerHTML =
+            keyPoints.length > 0
+              ? "<ul>" + keyPoints.map(function (p) { return "<li>" + esc(p) + "</li>"; }).join("") + "</ul>"
+              : "";
+          outSpecs.innerHTML =
+            specs.length > 0
+              ? "<ul>" + specs.map(function (s) { return "<li>" + esc(s) + "</li>"; }).join("") + "</ul>"
+              : "";
+          outEmail.textContent = data.cold_email || "";
+          outWhatsapp.textContent = data.whatsapp_script || "";
+          outVideo.textContent = data.video_script || "";
+          syncVideoPlayerFromData(data);
+
+          // render ppt_outline (backend: slide_title, slide_bullets)
+          if (Array.isArray(data.ppt_outline)) {
+            outPpt.innerHTML = data.ppt_outline
+              .map(function (slide, index) {
+                var rawTitle = slide && slide.slide_title;
+                var title =
+                  rawTitle != null && String(rawTitle).trim() !== ""
+                    ? esc(String(rawTitle))
+                    : "Untitled slide";
+                var bullets = Array.isArray(slide && slide.slide_bullets)
+                  ? slide.slide_bullets.filter(function (b) {
+                      return b != null && String(b).trim() !== "";
+                    })
+                  : [];
+                var listHtml =
+                  bullets.length === 0
+                    ? "<li>No content</li>"
+                    : bullets
+                        .map(function (b) {
+                          return "<li>" + esc(String(b)) + "</li>";
+                        })
+                        .join("");
+                return (
+                  '<div class="ppt-slide" style="margin-bottom:16px;">' +
+                  "<h3>Slide " +
+                  (index + 1) +
+                  ": " +
+                  title +
+                  "</h3>" +
+                  "<ul>" +
+                  listHtml +
+                  "</ul>" +
+                  "</div>"
+                );
+              })
+              .join("");
+          } else {
+            outPpt.innerHTML = "No PPT data";
+          }
+
+          if (data.imageUrl) {
+            outProductImage.src = resolveAssetUrl(data.imageUrl);
+            outProductImage.alt = "Product: " + (pt || "upload");
+            cardProductImage.classList.remove("hidden");
+            cardProductImage.setAttribute("aria-hidden", "false");
+          } else {
+            outProductImage.removeAttribute("src");
+            cardProductImage.classList.add("hidden");
+            cardProductImage.setAttribute("aria-hidden", "true");
+          }
+
+          placeholder.classList.add("hidden");
+          output.classList.remove("hidden");
+          statusDot.classList.add("live");
+          statusText.textContent = "AI generated";
+        } catch (err) {
+          statusDot.classList.remove("live");
+          console.error(err);
+          var detail = err && err.message ? String(err.message) : "Something went wrong.";
+          statusText.textContent = detail.length > 56 ? detail.slice(0, 53) + "…" : detail;
+          alert("Could not generate content.\n\n" + detail);
+        } finally {
+          setGenerateLoading(false);
+        }
+      }
+
+      function clearOutput() {
+        placeholder.classList.remove("hidden");
+        output.classList.add("hidden");
+        statusDot.classList.remove("live");
+        statusText.textContent = "Awaiting brief";
+        window.generatedData = null;
+        outOverview.innerHTML = "";
+        outPoints.innerHTML = "";
+        outSpecs.innerHTML = "";
+        outEmail.textContent = "";
+        outWhatsapp.textContent = "";
+        outVideo.textContent = "";
+        if (outVideoPlayer) {
+          outVideoPlayer.removeAttribute("src");
+          outVideoPlayer.load();
+        }
+        if (videoPlayerWrap) {
+          videoPlayerWrap.classList.add("hidden");
+          videoPlayerWrap.setAttribute("aria-hidden", "true");
+        }
+        outPpt.innerHTML = "";
+        if (outProductImage) {
+          outProductImage.removeAttribute("src");
+        }
+        if (cardProductImage) {
+          cardProductImage.classList.add("hidden");
+          cardProductImage.setAttribute("aria-hidden", "true");
+        }
+        if (btnPpt) btnPpt.disabled = true;
+      }
+
+      function fetchImageAsDataUrl(url) {
+        return fetch(url)
+          .then(function (res) {
+            if (!res.ok) throw new Error("Image fetch failed: " + res.status);
+            return res.blob();
+          })
+          .then(function (blob) {
+            return new Promise(function (resolve, reject) {
+              var reader = new FileReader();
+              reader.onloadend = function () {
+                resolve(reader.result);
+              };
+              reader.onerror = function () {
+                reject(reader.error);
+              };
+              reader.readAsDataURL(blob);
+            });
+          });
+      }
+
+      async function generatePpt() {
+        if (!btnPpt) return;
+        if (!window.generatedData) {
+          alert("Please click Generate first");
+          return;
+        }
+
+        btnPpt.disabled = true;
+        statusText.textContent = "Generating PPT...";
+
+        try {
+          await ensurePptxGenJSLoaded();
+          if (typeof window.PptxGenJS === "undefined") {
+            alert("PptxGenJS failed to load. Please refresh the page.");
+            return;
+          }
+
+          var data = window.generatedData;
+          console.log("PPT export slides:", window.generatedData.ppt_outline?.length);
+          if (!data || !data.ppt_outline) {
+            alert("No PPT outline found. Generate content first.");
+            return;
+          }
+
+          var pptx = new PptxGenJS();
+          pptx.layout = "LAYOUT_WIDE";
+
+          var productImgAttr =
+            outProductImage && outProductImage.getAttribute("src");
+          var hasProductImage =
+            productImgAttr != null && String(productImgAttr).trim() !== "";
+
+          if (hasProductImage) {
+            try {
+              var productImgResolved = outProductImage.src;
+              var imageDataUrl = await fetchImageAsDataUrl(productImgResolved);
+              var productSlide = pptx.addSlide();
+              productSlide.addText("Product Image", {
+                x: 0.5,
+                y: 0.5,
+                w: 12.3,
+                fontSize: 26,
+                bold: true
+              });
+              var imgBoxX = 1.2;
+              var imgBoxY = 1.35;
+              var imgBoxW = 10.93;
+              var imgBoxH = 5.6;
+              productSlide.addImage({
+                data: imageDataUrl,
+                x: imgBoxX,
+                y: imgBoxY,
+                w: imgBoxW,
+                h: imgBoxH,
+                sizing: { type: "contain", w: imgBoxW, h: imgBoxH }
+              });
+            } catch (imgErr) {
+              console.error("Could not embed product image in PPT:", imgErr);
+            }
+          }
+
+          (data.ppt_outline || []).forEach(function (slideData) {
+
+            var slide = pptx.addSlide();
+
+            var pptTitle = slideData.slide_title;
+            var titleText =
+              pptTitle != null && String(pptTitle).trim() !== ""
+                ? String(pptTitle)
+                : "Untitled slide";
+            slide.addText(titleText, {
+              x: 0.5,
+              y: 0.5,
+              w: 12.3,
+              fontSize: 26,
+              bold: true
+            });
+
+            var bullets = Array.isArray(slideData.slide_bullets)
+              ? slideData.slide_bullets.filter(function (b) {
+                  return b != null && String(b).trim() !== "";
+                })
+              : [];
+            if (bullets.length === 0) {
+              bullets = ["No content"];
+            }
+
+            bullets.forEach(function (b, i) {
+              slide.addText(String(b), {
+                x: 0.7,
+                y: 1.5 + i * 0.6,
+                w: 11.8,
+                fontSize: 18,
+                bullet: true
+              });
+            });
+          });
+
+          pptx.writeFile({ fileName: "product_presentation.pptx" });
+          statusText.textContent = "PPT generated";
+        } catch (err) {
+          statusText.textContent = "Error generating PPT";
+          console.error(err);
+          alert("Failed to generate PPT. Check the console for details.");
+        } finally {
+          btnPpt.disabled = false;
+          setTimeout(function () {
+            // Restore the status text without disturbing the rest of the UI.
+            statusText.textContent = "AI generated";
+          }, 800);
+        }
+      }
+
+      function generateVideo() {
+        if (!window.generatedData || !Array.isArray(window.generatedData.ppt_outline)) {
+          alert("Generate content first");
+          return;
+        }
+
+        var scriptParts = [];
+
+        window.generatedData.ppt_outline.forEach(function (slide, idx) {
+          var slideTitle =
+            slide.slide_title != null && String(slide.slide_title).trim() !== ""
+              ? String(slide.slide_title)
+              : "Untitled slide";
+          var bullets = Array.isArray(slide.slide_bullets)
+            ? slide.slide_bullets.filter(function (b) {
+                return b != null && String(b).trim() !== "";
+              })
+            : [];
+
+          var slideBlock = "[" + idx + ":00–" + idx + ":10] " + slideTitle + "\n";
+
+          if (bullets.length === 0) {
+            slideBlock += "- No content\n";
+          } else {
+            bullets.forEach(function (bullet) {
+              slideBlock += "- " + bullet + "\n";
+            });
+          }
+
+          scriptParts.push(slideBlock.trim());
+        });
+
+        var script = scriptParts.join("\n\n");
+
+        // Render to page instead of alert
+        var outVideo = document.getElementById("out-video");
+        if (outVideo) {
+          outVideo.textContent = script;
+        }
+        syncVideoPlayerFromData(window.generatedData || {});
+
+        // Update status text
+        var statusText = document.getElementById("status-text");
+        if (statusText) {
+          statusText.textContent = "Video script generated";
+        }
+      }
+
+      btnGenerate.addEventListener("click", generate);
+      btnClear.addEventListener("click", clearOutput);
+      if (btnPpt) btnPpt.addEventListener("click", generatePpt);
+      if (btnVideo) btnVideo.addEventListener("click", generateVideo);
+    })();
+
+</script>
+
+</body>
+</html>
